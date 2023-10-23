@@ -46,6 +46,8 @@ user := User{ID: 1, Name: "John Doe"}
 resource := &fractal.ItemResource{}
 resource.SetData(user)
 resource.SetTransformer(&UserTransformer{})
+
+//你可以获取转为json的数据
 if resp, err := resource.ToJson(); err != nil {
     //错误处理
     return
@@ -137,6 +139,26 @@ fmt.Println(resp)
 // resource.SetData([]int{1,2,3}) // [1,2,3]
 ```
 
+#### 4.2.5 转换的结果
+
+- 返回值为 `json`
+
+  ```go
+  if resp, err := resource.ToJson(); err != nil{
+  	...
+  }
+  fmt.Println(resp)
+  ```
+
+- 返回值为 `map[string]interface{}`
+
+  ```go
+  if err:= resource.TransformResource; err !=nil{
+  	...
+  }
+  fmt.Println(resource.GetTransformedData())
+  ```
+
 ### 4.3 转换器 `Transformer`
 
 `Transformer` 是执行数据转换的地方，写在一个统一的地方，可以很方便的让不同的接口使用相同的返回数据，代码复用。
@@ -161,8 +183,26 @@ type Transformer struct {
 DemoTransformer struct {
     Transformer
 }
-
 ...
+```
+
+如果你需要根据不同的条件， 比如在不同的路由下返回不同的数据结构， 我觉得比较好的做法是：
+将判断条件添加在 DemoTransformer 中, 在需要的地方传入
+
+```go
+
+DemoTransformer struct {
+    Transformer
+		RouteName string
+}
+...
+
+trans := &DemoTransformer{}
+trans.RouteName = "xxxxx"
+...
+
+DemoResource.SetTransformer(trans)
+
 ```
 
 ### 4.4 嵌套包含 `Include`
@@ -269,3 +309,7 @@ func (ut *UserTransformer) includeBooks() fractal.ResourceInterface {
 ## 五、 参考
 
 本项目主要参考了 [league/fractal](https://fractal.thephpleague.com/transformers/) 适合 `php` 转 `go` 的小伙伴
+
+```
+
+```
