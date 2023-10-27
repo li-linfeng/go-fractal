@@ -237,7 +237,7 @@ func (ut *UserTransformer) includePosts() fractal.ResourceInterface {
 	// 获取并返回相关帖子。这是一个简化的示例。
 	posts := []Post{{Title: "帖子 1"}, {Title: "帖子 2"}}
 	resource := &fractal.CollectionResource{}
-	resource.SetSliceData(posts)
+	resource.SetData(posts)
 	resource.SetTransformer(&PostTransformer{}) // 假设您有一个 PostTransformer
 	return resource
 }

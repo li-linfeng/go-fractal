@@ -2,6 +2,7 @@ package fractal
 
 import (
 	"fmt"
+	"reflect"
 )
 
 type ItemResource struct {
@@ -28,6 +29,11 @@ func (i *ItemResource) SetNestedInclude(includes map[string]interface{}) {
 }
 
 func (i *ItemResource) checkDataValidate() error {
+	// 如果是一个指针，先转为指针指向的值
+	if reflect.TypeOf(i.data).Kind() == reflect.Pointer {
+		i.data = reflect.ValueOf(i.data).Elem().Interface()
+	}
+
 	if IsSlice(i.data) {
 		return fmt.Errorf("input can not be  slice : %T", i.data)
 	}
